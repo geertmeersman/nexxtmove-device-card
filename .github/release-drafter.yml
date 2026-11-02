@@ -8,32 +8,27 @@ categories:
           - enhancement
           - feat
           - feature
-      - conventional:
-          type: feat
   - title: '🐛 Bug fixes'
     semver-increment: patch
     when:
       - labels:
           - bug
           - fix
-      - conventional:
-          type: fix
   - title: '⚠️ Breaking'
     semver-increment: major
     when:
-      - label: breaking
+      - labels:
+          - breaking
   - title: '🔒 Security'
     semver-increment: patch
     when:
-      - label: security
-      - conventional:
-          type: security
+      - labels:
+          - security
   - title: '📦 Dependencies'
     semver-increment: patch
     when:
-      - label: dependencies
-      - conventional:
-          type: deps
+      - labels:
+          - dependencies
   - title: '🔧 Maintenance'
     semver-increment: patch
     when:
@@ -41,12 +36,6 @@ categories:
           - chore
           - ci
           - refactor
-      - conventional:
-          types:
-            - chore
-            - ci
-            - refactor
-            - perf
   - title: '📖 Documentation'
     semver-increment: patch
     when:
@@ -54,11 +43,8 @@ categories:
           - docs
           - doc
           - documentation
-      - conventional:
-          type: docs
-  - title: '🚫 Skip changelog'
-    labels:
-      - skip-changelog
+exclude-labels:
+  - skip-changelog
 change-template: '- $TITLE (#$NUMBER) @$AUTHOR'
 change-title-escapes: '\<*_&'
 template: |
