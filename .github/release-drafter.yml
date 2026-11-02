@@ -56,9 +56,9 @@ categories:
           - documentation
       - conventional:
           type: docs
-  - type: pre-exclude
-    when:
-      label: skip-changelog
+  - title: '🚫 Skip changelog'
+    labels:
+      - skip-changelog
 change-template: '- $TITLE (#$NUMBER) @$AUTHOR'
 change-title-escapes: '\<*_&'
 template: |
