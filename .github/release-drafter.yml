@@ -43,8 +43,10 @@ categories:
           - docs
           - doc
           - documentation
-exclude-labels:
-  - skip-changelog
+  - type: pre-exclude
+    when:
+      - labels:
+          - skip-changelog
 change-template: '- $TITLE (#$NUMBER) @$AUTHOR'
 change-title-escapes: '\<*_&'
 template: |
