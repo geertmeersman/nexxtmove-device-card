@@ -6,6 +6,8 @@
 
 A Lovelace card for [Home Assistant](https://www.home-assistant.io/) that displays info, statistics and recent events for a [Nexxtmove](https://www.nexxtmove.com/) charging device.
 
+![screenshot](docs/images/screenshot.png)
+
 ## Requirements
 
 - [Nexxtmove integration](https://github.com/geertmeersman/nexxtmove) installed via HACS
@@ -17,9 +19,6 @@ A Lovelace card for [Home Assistant](https://www.home-assistant.io/) that displa
 3. Add: `https://github.com/geertmeersman/nexxtmove-device-card`
 4. Category: `Lovelace`
 5. Install "Nexxtmove Device Card"
-6. Add the resource in Settings → Dashboards → Resources:
-   - URL: `/hacsfiles/nexxtmove-device-card/nexxtmove-device-card.js`
-   - Type: `JavaScript module`
 
 [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=geertmeersman&repository=nexxtmove-device-card&category=lovelace)
 
