@@ -6,6 +6,8 @@
 
 A Lovelace card for [Home Assistant](https://www.home-assistant.io/) that displays info, statistics and recent events for a [Nexxtmove](https://www.nexxtmove.com/) charging device.
 
+![screenshot](docs/images/screenshot.png)
+
 ## Requirements
 
 - [Nexxtmove integration](https://github.com/geertmeersman/nexxtmove) installed via HACS
