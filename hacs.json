@@ -1,6 +1,6 @@
 {
   "name": "Nexxtmove Device Card",
-  "description": "Lovelace kaart voor Nexxtmove charging devices",
+  "description": "Lovelace card for Nexxtmove charging devices",
   "render_readme": true,
   "filename": "nexxtmove-device-card.js",
   "content_in_root": true
