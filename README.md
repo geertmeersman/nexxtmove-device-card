@@ -21,6 +21,8 @@ A Lovelace card for [Home Assistant](https://www.home-assistant.io/) that displa
    - URL: `/hacsfiles/nexxtmove-device-card/nexxtmove-device-card.js`
    - Type: `JavaScript module`
 
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=geertmeersman&repository=nexxtmove-device-card&category=lovelace)
+
 ## Configuration
 
 The card has a visual editor — just pick the device from the dropdown.
