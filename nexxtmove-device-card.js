@@ -4,50 +4,6 @@ class NexxtmoveDeviceCard extends HTMLElement {
     this._expanded = {};
   }
 
-  static _translations = {
-    en: {
-      pick_device:       "Choose a device in the editor.",
-      pick_placeholder:  "— Choose a device —",
-      device_label:      "Charging device",
-      show_label:        "Show",
-      show_stats:        "Monthly statistics (with expandable sessions)",
-      show_non_invoiced: "Outstanding amount",
-      show_price:        "Price per kWh",
-      show_max_power:    "Max power",
-      show_charges:      "Recent charge sessions (section)",
-      show_events:       "Recent events",
-      recent_charges:    "Recent charge sessions",
-      recent_events:     "Recent events",
-      no_charges:        "No charge sessions found.",
-      sessions:          "sessions",
-      open:              "outstanding",
-      kw_max:            "kW max",
-    },
-    nl: {
-      pick_device:       "Kies een device in de editor.",
-      pick_placeholder:  "— Kies een device —",
-      device_label:      "Charging device",
-      show_label:        "Tonen",
-      show_stats:        "Maandstatistieken (met uitklapbare sessies)",
-      show_non_invoiced: "Openstaand bedrag",
-      show_price:        "Prijs per kWh",
-      show_max_power:    "Max vermogen",
-      show_charges:      "Recente laadsessies (sectie)",
-      show_events:       "Recente events",
-      recent_charges:    "Recente laadsessies",
-      recent_events:     "Recente events",
-      no_charges:        "Geen laadsessies gevonden.",
-      sessions:          "sessies",
-      open:              "open",
-      kw_max:            "kW max",
-    },
-  };
-
-  _t(key) {
-    const lang = this._hass?.locale?.language?.toLowerCase().split("-")[0] || "en";
-    return (NexxtmoveDeviceCard._translations[lang] || NexxtmoveDeviceCard._translations.en)[key] || key;
-  }
-
   set hass(hass) {
     const oldHass = this._hass;
     this._hass = hass;
@@ -181,7 +137,7 @@ class NexxtmoveDeviceCard extends HTMLElement {
     const r = this._entitiesForDevice(this._config.device_id);
 
     if (!r.charging_device_sensor) {
-      this.innerHTML = `<ha-card><div style="padding:16px;color:var(--secondary-text-color);">${this._t("pick_device")}</div></ha-card>`;
+      this.innerHTML = `<ha-card><div style="padding:16px;color:var(--secondary-text-color);">Kies een device in de editor.</div></ha-card>`;
       return;
     }
 
@@ -193,7 +149,7 @@ class NexxtmoveDeviceCard extends HTMLElement {
     const pointStatus = (this._s(r.charging_point_sensor) || "").toUpperCase();
     const pointAttrs = r.charging_point_sensor
       ? (this._hass.states[r.charging_point_sensor]?.attributes || {}) : {};
-    const maxPower = pointAttrs.maxPower ? `${Math.round(pointAttrs.maxPower)} ${this._t("kw_max")}` : null;
+    const maxPower = pointAttrs.maxPower ? `${Math.round(pointAttrs.maxPower)} kW max` : null;
     const price = pointAttrs.price || null;
 
     const monthEnergy  = r.month_energy_sensor  ? parseFloat(this._s(r.month_energy_sensor))  : null;
@@ -226,7 +182,7 @@ class NexxtmoveDeviceCard extends HTMLElement {
           </div>
           <div class="row-sub">${c.costVat?.toFixed(2)} €</div>
         </div>`).join("")
-      : `<div style="padding:6px 0;font-size:0.82em;color:var(--secondary-text-color);">${this._t("no_charges")}</div>`;
+      : `<div style="padding:6px 0;font-size:0.82em;color:var(--secondary-text-color);">Geen laadsessies gevonden.</div>`;
 
     const expandOpen = !!this._expanded["charges"];
 
@@ -314,14 +270,14 @@ class NexxtmoveDeviceCard extends HTMLElement {
           <div class="status-badge">${pointStatus || "—"}</div>
         </div>
 
-        ${show.stats ? `
+        ${show.stats || show.non_invoiced || show.price || show.max_power ? `
         <div class="chips">
-          ${monthEnergy !== null && !isNaN(monthEnergy) ? `
+          ${show.stats && monthEnergy !== null && !isNaN(monthEnergy) ? `
           <div class="chip" id="chip-energy">
             <ha-icon icon="mdi:lightning-bolt" style="color:var(--warning-color, #e0956a);"></ha-icon>
             ${monthEnergy.toFixed(1)} kWh
           </div>` : ""}
-          ${monthCost !== null && !isNaN(monthCost) ? `
+          ${show.stats && monthCost !== null && !isNaN(monthCost) ? `
           <div class="divider"></div>
           <div class="chip" id="chip-cost">
             <ha-icon icon="mdi:currency-eur" style="color:var(--primary-color);"></ha-icon>
@@ -331,15 +287,15 @@ class NexxtmoveDeviceCard extends HTMLElement {
           <div class="divider"></div>
           <div class="chip" id="chip-non-invoiced">
             <ha-icon icon="mdi:receipt-clock-outline" style="color:var(--warning-color, #e0956a);"></ha-icon>
-            ${nonInvoiced.toFixed(2)} € ${this._t("open")}
+            ${nonInvoiced.toFixed(2)} € open
           </div>` : ""}
-          ${monthCharges !== null && !isNaN(monthCharges) ? `
+          ${show.stats && monthCharges !== null && !isNaN(monthCharges) ? `
           <div class="divider"></div>
           ${show.charges
-            ? `<div class="chip"><ha-icon icon="mdi:counter" style="color:var(--secondary-text-color);"></ha-icon>${monthCharges} ${this._t("sessions")}</div>`
+            ? `<div class="chip"><ha-icon icon="mdi:counter" style="color:var(--secondary-text-color);"></ha-icon>${monthCharges} sessies</div>`
             : `<div class="chip chip-expand" id="chip-charges">
                 <ha-icon icon="mdi:counter" style="color:var(--secondary-text-color);"></ha-icon>
-                ${monthCharges} ${this._t("sessions")}
+                ${monthCharges} sessies
                 <ha-icon id="expand-icon-charges" icon="${expandOpen ? "mdi:chevron-up" : "mdi:chevron-down"}" style="--mdc-icon-size:13px; color:var(--secondary-text-color); margin-left:2px;"></ha-icon>
                </div>`
           }` : ""}
@@ -356,20 +312,20 @@ class NexxtmoveDeviceCard extends HTMLElement {
             ${maxPower}
           </div>` : ""}
         </div>
-        ${!show.charges && monthCharges !== null && !isNaN(monthCharges) ? `
+        ${show.stats && !show.charges && monthCharges !== null && !isNaN(monthCharges) ? `
         <div id="panel-charges" class="expand-panel" style="max-height:${expandOpen ? "500px" : "0"};">
           ${chargesRowsHtml}
         </div>` : ""}` : ""}
 
         ${show.charges && recentCharges.length > 0 ? `
         <div class="section">
-          <div class="section-title">${this._t("recent_charges")}</div>
+          <div class="section-title">Recente laadsessies</div>
           ${chargesRowsHtml}
         </div>` : ""}
 
         ${show.events && recentEvents.length > 0 ? `
         <div class="section">
-          <div class="section-title">${this._t("recent_events")}</div>
+          <div class="section-title">Recente events</div>
           ${recentEvents.map(e => `
           <div class="row">
             <ha-icon icon="${this._eventIcon(e.type)}"></ha-icon>
@@ -398,8 +354,6 @@ customElements.define("nexxtmove-device-card", NexxtmoveDeviceCard);
 // Editor
 // -------------------------------------------------------
 class NexxtmoveDeviceCardEditor extends HTMLElement {
-  static _translations = NexxtmoveDeviceCard._translations;
-
   set hass(hass) {
     this._hass = hass;
     if (!this.shadowRoot?.querySelector("#device-select")) this._render();
@@ -408,11 +362,6 @@ class NexxtmoveDeviceCardEditor extends HTMLElement {
   setConfig(config) {
     this._config = { ...config };
     if (this._hass) this._render();
-  }
-
-  _t(key) {
-    const lang = this._hass?.locale?.language?.toLowerCase().split("-")[0] || "en";
-    return (NexxtmoveDeviceCardEditor._translations[lang] || NexxtmoveDeviceCardEditor._translations.en)[key] || key;
   }
 
   _nexxtmoveDevices() {
@@ -447,12 +396,12 @@ class NexxtmoveDeviceCardEditor extends HTMLElement {
     const devices = this._nexxtmoveDevices();
 
     const checks = [
-      { key: "show_stats",        label: this._t("show_stats") },
-      { key: "show_non_invoiced", label: this._t("show_non_invoiced") },
-      { key: "show_price",        label: this._t("show_price") },
-      { key: "show_max_power",    label: this._t("show_max_power") },
-      { key: "show_charges",      label: this._t("show_charges") },
-      { key: "show_events",       label: this._t("show_events") },
+      { key: "show_stats",        label: "Maandstatistieken (met uitklapbare sessies)" },
+      { key: "show_non_invoiced", label: "Openstaand bedrag" },
+      { key: "show_price",        label: "Prijs per kWh" },
+      { key: "show_max_power",    label: "Max vermogen" },
+      { key: "show_charges",      label: "Recente laadsessies (sectie)" },
+      { key: "show_events",       label: "Recente events" },
     ];
 
     this.shadowRoot.innerHTML = `
@@ -472,14 +421,14 @@ class NexxtmoveDeviceCardEditor extends HTMLElement {
       </style>
       <div class="editor">
         <div>
-          <label>${this._t("device_label")}</label>
+          <label>Charging device</label>
           <select id="device-select">
-            <option value="">${this._t("pick_placeholder")}</option>
+            <option value="">— Kies een device —</option>
             ${devices.map(d => `<option value="${d.id}" ${d.id === deviceId ? "selected" : ""}>${d.name}</option>`).join("")}
           </select>
         </div>
         <div>
-          <label>${this._t("show_label")}</label>
+          <label>Tonen</label>
           <div class="toggles">
             ${checks.map(c => `
             <label class="toggle-row">
