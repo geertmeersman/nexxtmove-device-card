@@ -1,5 +1,4 @@
 name: Release - Bump and Release 🚀
-
 on: [workflow_dispatch]
 
 concurrency:
@@ -35,11 +34,16 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: 🧾 Display version info
+        run: |
+          echo "Next version: $NEXT_VERSION"
+        env:
+          NEXT_VERSION: ${{ steps.semver.outputs.next }}
+
       - name: 🔄 Update version in JS file
         env:
           tag_name: ${{ steps.semver.outputs.next }}
         run: |
-          sed -i "s/version: \"[^\"]*\"/version: \"$tag_name\"/" nexxtmove-device-card.js || true
           echo $tag_name > VERSION
 
       - name: 📝 Publish release
@@ -48,14 +52,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: Release ${{ steps.semver.outputs.next }}
+          name: ${{ steps.semver.outputs.next }}
           tag: ${{ steps.semver.outputs.next }}
           publish: true
 
       - name: ✅ Commit version bump
         uses: EndBug/add-and-commit@v9
         with:
-          add: "VERSION nexxtmove-device-card.js"
+          add: "VERSION"
           message: "chore(release): bump version to ${{ steps.semver.outputs.next }}"
           push: true
 
